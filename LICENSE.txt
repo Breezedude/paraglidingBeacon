@@ -1,0 +1,22 @@
+Breezedude Beacon
+Copyright (c) 2026 Breezedude
+
+This project is licensed for non-commercial use only.
+
+The source code, documentation and configuration page in this repository are
+licensed under the Creative Commons Attribution-NonCommercial 4.0
+International licence (CC BY-NC 4.0):
+https://creativecommons.org/licenses/by-nc/4.0/
+
+Commercial use (including use in for-profit projects, products, services or
+manufacturing) is prohibited without a separate agreement. Contact me through
+the repository for licensing inquiries.
+
+Third-party components keep their own licences:
+
+- Nordic Semiconductor SoftDevice S140, contained in firmware-full.uf2:
+  see licenses/nordic-softdevice.txt
+- Libraries compiled into the firmware files and fetched at build time:
+  Adafruit nRF52 Arduino core (LGPL-2.1, with parts under MIT and other
+  licences), RadioLib (MIT), TinyGPSPlus (LGPL-2.1), ArduinoJson (MIT).
+  See their repositories for the full terms.

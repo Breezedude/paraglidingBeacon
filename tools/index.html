@@ -1,0 +1,1368 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f7f9">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f1319">
+<title>Breezedude Beacon</title>
+<style>
+  /* ---- palette ----------------------------------------------------------
+     The Breezedude tokens: cool neutrals with a single blue accent. Every
+     token is defined in both themes, so nothing falls back to a browser
+     default. */
+  :root{
+    --bg:#f6f7f9; --card:#ffffff; --sunk:#eef1f4;
+    --line:#dde2e8; --line-soft:#e9edf1;
+    --text:#11161f; --muted:#565f6d; --faint:#8b94a1;
+    --accent:#1d4ed8; --accent-weak:rgba(29,78,216,.08); --on-accent:#ffffff;
+    --warn:#9a5b06; --danger:#c02626; --danger-weak:rgba(192,38,38,.08); --ok:#15803d;
+    --track:#cbd2db;
+    --shadow:0 1px 2px rgba(17,22,31,.05),0 2px 8px rgba(17,22,31,.04);
+    --logo:url("data:image/png;base64,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");
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme=light]){
+      --bg:#0f1319; --card:#161b23; --sunk:#0b0e13;
+      --line:#262d38; --line-soft:#1e242d;
+      --text:#e7eaf0; --muted:#9ba5b4; --faint:#6c7686;
+      --accent:#6aa5ff; --accent-weak:rgba(106,165,255,.12); --on-accent:#0b0f15;
+      --warn:#fbbf24; --danger:#f87171; --danger-weak:rgba(248,113,113,.12); --ok:#4ade80;
+      --track:#38414f;
+      --shadow:0 1px 2px rgba(0,0,0,.4);
+    }
+  }
+  [data-theme=dark]{
+    --bg:#0f1319; --card:#161b23; --sunk:#0b0e13;
+    --line:#262d38; --line-soft:#1e242d;
+    --text:#e7eaf0; --muted:#9ba5b4; --faint:#6c7686;
+    --accent:#6aa5ff; --accent-weak:rgba(106,165,255,.12); --on-accent:#0b0f15;
+    --warn:#fbbf24; --danger:#f87171; --danger-weak:rgba(248,113,113,.12); --ok:#4ade80;
+    --track:#38414f;
+    --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--text);
+    font:15px/1.45 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased}
+  button,input,select{font:inherit;color:inherit}
+
+  /* The logo is a mask filled with the text colour, so it follows the theme
+     without a second image or an inverting filter. */
+  .mark{display:block;flex:none;background:var(--text);
+    -webkit-mask:var(--logo) center/contain no-repeat;mask:var(--logo) center/contain no-repeat}
+
+  header{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;
+    gap:.75rem;padding:max(.5rem,env(safe-area-inset-top)) max(1rem,calc(50% - 300px + 1rem)) .5rem;
+    background:color-mix(in srgb,var(--bg) 86%,transparent);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line-soft)}
+  .brand{display:flex;align-items:center;gap:.6rem;min-width:0}
+  .brand .mark{width:36px;height:36px}
+  .brand>span{min-width:0}
+  .brand b{display:block;font-weight:650;letter-spacing:-.01em;font-size:.98rem;line-height:1.25;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .brand .sub{display:flex;align-items:center;gap:.4rem;color:var(--muted);font-size:.76rem;
+    white-space:nowrap}
+  .led{width:7px;height:7px;border-radius:50%;flex:none;background:var(--faint)}
+  body:not(.off) .brand .led{background:var(--ok);box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 22%,transparent)}
+  body.pending .brand .led{background:var(--warn);box-shadow:0 0 0 3px color-mix(in srgb,var(--warn) 22%,transparent)}
+  .saved{color:var(--ok);opacity:0;transition:opacity .2s}
+  .saved.on{opacity:1}
+
+  .tools{display:flex;gap:.4rem;flex:none}
+  .iconbtn{display:grid;place-items:center;width:38px;height:38px;flex:none;border-radius:10px;
+    border:1px solid var(--line);background:var(--card);color:var(--muted);cursor:pointer;
+    transition:border-color .15s,color .15s,background-color .15s}
+  .iconbtn:hover{color:var(--text);border-color:var(--track)}
+  .iconbtn:active{transform:scale(.95)}
+  .iconbtn:focus-visible,.btn:focus-visible,.linkbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .iconbtn.lang{font-size:.74rem;font-weight:700;letter-spacing:.04em}
+  /* Ending the connection is the one destructive control up here, and is
+     coloured as such so it is not taken for a setting. */
+  .iconbtn.hangup{color:var(--danger);background:var(--danger-weak);
+    border-color:color-mix(in srgb,var(--danger) 30%,transparent)}
+  .iconbtn.hangup:hover{color:var(--danger);border-color:var(--danger)}
+  @media (max-width:440px){
+    header{gap:.5rem}
+    .brand{gap:.5rem}
+    .brand .mark{width:30px;height:30px}
+    .brand b{font-size:.88rem}
+    .tools{gap:.3rem}
+    .iconbtn{width:34px;height:34px;border-radius:9px}
+  }
+  #themeBtn .sun{display:none}
+  [data-theme=dark] #themeBtn .sun{display:block}
+  [data-theme=dark] #themeBtn .moon{display:none}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme=light]) #themeBtn .sun{display:block}
+    :root:not([data-theme=light]) #themeBtn .moon{display:none}
+  }
+
+  /* width:100% is load bearing: main is a flex item and the auto side margins
+     would otherwise shrink it to its content, which shows on the connect view. */
+  main{width:100%;max-width:600px;margin:0 auto;padding:.85rem 1rem calc(2rem + env(safe-area-inset-bottom))}
+  body.off,body.pending{display:flex;flex-direction:column;min-height:100dvh}
+  body.off main,body.pending main{flex:1;display:flex;flex-direction:column;justify-content:center}
+  body.off .only-on{display:none}
+  body:not(.off) .only-off{display:none}
+  /* Connected but not confirmed: neither the connect button nor the settings
+     belong on screen, only the request to press the button on the device. */
+  body.pending .only-on{display:none}
+  body.pending .only-off{display:none}
+  body:not(.pending) .only-pending{display:none}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);margin:0 0 .7rem;overflow:hidden}
+  .card>.pad{padding:.85rem .95rem}
+
+  .hero{display:flex;flex-direction:column;align-items:center;gap:1.6rem;padding:0 0 12vh}
+  .hero .mark{width:min(46vw,168px);height:min(46vw,168px);opacity:.92}
+  .hero .btn{max-width:20rem}
+
+  .confirm{padding:1.9rem 1.25rem 1.6rem;text-align:center}
+  .confirm h1{margin:1.1rem 0 .5rem;font-size:1.1rem;font-weight:650}
+  .confirm p{margin:0 auto .7rem;color:var(--muted);font-size:.9rem;max-width:26rem;line-height:1.45}
+  .confirm .note{font-size:.82rem;color:var(--faint)}
+  /* A button being pressed: the ring is the finger arriving. */
+  .press{position:relative;width:58px;height:58px;margin:0 auto}
+  .press::before,.press::after{content:"";position:absolute;inset:0;border-radius:50%}
+  .press::before{inset:14px;background:var(--accent)}
+  .press::after{border:2px solid var(--accent);animation:press 1.6s ease-out infinite}
+  @keyframes press{0%{transform:scale(1.25);opacity:0}35%{opacity:.9}100%{transform:scale(.52);opacity:0}}
+  @media (prefers-reduced-motion:reduce){ .press::after{animation:none;opacity:.5} }
+
+  /* Section labels are set apart from body text: small, spaced, uppercase. */
+  .seclabel{margin:1.3rem .25rem .5rem;font-size:.7rem;font-weight:700;letter-spacing:.11em;
+    text-transform:uppercase;color:var(--faint)}
+  .seclabel.first{margin-top:.35rem}
+
+  /* Accordions keep the page short. */
+  details.card>summary{list-style:none;cursor:pointer;padding:.7rem .95rem;
+    display:flex;align-items:center;gap:.7rem;font-weight:600}
+  details.card>summary::-webkit-details-marker{display:none}
+  details.card>summary::after{content:"";margin:0 .15rem 3px auto;width:8px;height:8px;flex:none;
+    border-right:2px solid var(--faint);border-bottom:2px solid var(--faint);
+    transform:rotate(45deg);transition:transform .18s}
+  details.card[open]>summary::after{transform:rotate(225deg);margin-bottom:-3px}
+  details.card[open]>summary{border-bottom:1px solid var(--line-soft)}
+  details.card>summary:hover .ico{background:color-mix(in srgb,var(--accent) 16%,transparent)}
+  summary .tally{margin-left:auto;color:var(--muted);font-weight:400;font-size:.85rem}
+  summary .tally+*{margin-left:0}
+  details.card>summary:has(.tally:not(:empty))::after{margin-left:.5rem}
+  details.card[open]>summary .tally{visibility:hidden}
+  summary .ico{color:var(--accent);background:var(--accent-weak);flex:none;display:grid;place-items:center;
+    width:32px;height:32px;border-radius:9px;transition:background-color .15s}
+
+  .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line-soft)}
+  .stat{background:var(--card);padding:.7rem .95rem}
+  .stat>span{display:block;color:var(--muted);font-size:.76rem;margin-bottom:.15rem}
+  .stat b{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;font-size:1.02rem;font-weight:620;
+    font-variant-numeric:tabular-nums}
+  .stat b.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.94rem;
+    user-select:all;-webkit-user-select:all}
+  .stat b small{font-weight:400;color:var(--faint);font-size:.78rem}
+  .stat b .dim{color:var(--muted);font-weight:400}
+  .stat.wide{grid-column:1/-1}
+  .stat .led.ok{background:var(--ok)}
+  .stat .led.wait{background:var(--warn);animation:blink 1.2s ease-in-out infinite}
+  @keyframes blink{50%{opacity:.25}}
+  @media (prefers-reduced-motion:reduce){ .stat .led.wait{animation:none} }
+  .gauge{display:block;height:4px;margin-top:.45rem;border-radius:2px;background:var(--sunk);overflow:hidden}
+  .gauge i{display:block;height:100%;width:0;border-radius:2px;background:var(--ok);transition:width .4s}
+  .gauge.low i{background:var(--danger)}
+  .gauge.mid i{background:var(--warn)}
+
+  .chiprow{display:flex;align-items:center;gap:.5rem;padding:.6rem .95rem;border-top:1px solid var(--line-soft)}
+  .chiprow>.k{color:var(--muted);font-size:.8rem;flex:none;width:4.9rem}
+  .chips{display:flex;flex-wrap:wrap;gap:.35rem}
+  .chip{display:inline-flex;align-items:center;gap:.35rem;padding:.2rem .55rem;border-radius:999px;
+    font-size:.79rem;font-weight:560;background:var(--sunk);color:var(--faint);border:1px solid transparent}
+  .chip.on{background:var(--accent-weak);color:var(--accent);
+    border-color:color-mix(in srgb,var(--accent) 25%,transparent)}
+  .chip .n{font-variant-numeric:tabular-nums;opacity:.75;font-weight:400}
+  .chip .dot{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.5}
+  .chip.on .dot{opacity:1}
+
+  .row{display:grid;grid-template-columns:1fr auto;gap:.5rem 1rem;align-items:center;
+    padding:.6rem .95rem;border-top:1px solid var(--line-soft)}
+  details.card[open]>.row:first-of-type{border-top:0}
+  .row .lb{min-width:0}
+  .row .lb b{display:block;font-weight:500}
+  .row .lb small{display:block;color:var(--muted);font-size:.78rem;line-height:1.3;margin-top:.1rem}
+  /* min-width:0 is required: an <input> reports its 20 character default as its
+     min-content width, which would otherwise widen the grid track past the card. */
+  .row .ctl{display:flex;align-items:center;gap:.4rem;justify-self:end;min-width:0}
+  .row .ctl em{font-style:normal;color:var(--faint);font-size:.85rem;flex:none}
+
+  input[type=text],input[type=number],select{height:40px;padding:0 .6rem;border:1px solid var(--line);
+    border-radius:10px;background:var(--sunk);color:var(--text);min-width:0;
+    transition:border-color .15s,box-shadow .15s}
+  input[type=text]:hover,input[type=number]:hover,select:hover{border-color:var(--track)}
+  select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:2rem;
+    background-repeat:no-repeat;background-position:right .55rem center;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%238b94a1' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E")}
+  input:focus-visible,select:focus-visible{outline:0;border-color:var(--accent);
+    box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+  input.bad{border-color:var(--danger);box-shadow:0 0 0 1px var(--danger)}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+  .w-num{width:5.5rem}
+  .w-hex{width:5rem}
+  .w-hex4{width:6.4rem}
+  .w-sel{width:11rem}
+  .w-txt{width:11rem}
+
+  /* Below this width the control moves under its label and fills the row.
+     Switches stay on the right, where a full width toggle would look odd. */
+  @media (max-width:440px){
+    .row{grid-template-columns:1fr}
+    .row .ctl{justify-self:stretch}
+    .row .ctl>input,.row .ctl>select,.row .ctl>.slide,.row .ctl>.seg{flex:1;width:auto}
+    .row .ctl>.w-hex{flex:0 0 4.6rem}
+    .row.sw-row{grid-template-columns:1fr auto}
+    .row.sw-row .ctl{justify-self:end;flex:none}
+  }
+
+  .sw{position:relative;flex:none;width:46px;height:27px;border-radius:999px;background:var(--track);
+    transition:background .18s;cursor:pointer;display:block}
+  .sw::after{content:"";position:absolute;top:3px;left:3px;width:21px;height:21px;border-radius:50%;
+    background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.3);transition:transform .18s}
+  input.hid{position:absolute;opacity:0;pointer-events:none}
+  input:checked+.sw{background:var(--accent)}
+  input:checked+.sw::after{transform:translateX(19px)}
+  input:focus-visible+.sw{outline:2px solid var(--accent);outline-offset:2px}
+
+  .slide{display:flex;align-items:center;gap:.7rem;width:14rem}
+  .slide input[type=range]{flex:1;min-width:0;accent-color:var(--accent);height:26px}
+  .slide .out{min-width:5.6rem;text-align:right;font-size:.84rem;color:var(--muted);
+    font-variant-numeric:tabular-nums}
+
+  .seg{display:flex;background:var(--sunk);border:1px solid var(--line);border-radius:11px;padding:3px;gap:2px}
+  .seg label{flex:1;text-align:center;cursor:pointer;user-select:none;position:relative}
+  .seg input{position:absolute;opacity:0;pointer-events:none}
+  .seg span{display:block;padding:.38rem .5rem;border-radius:8px;color:var(--muted);
+    font-size:.85rem;white-space:nowrap;transition:background-color .15s,color .15s}
+  .seg input:checked+span{background:var(--card);color:var(--text);box-shadow:var(--shadow)}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:46px;
+    padding:0 1.1rem;border-radius:12px;border:1px solid var(--line);background:var(--card);
+    cursor:pointer;font-weight:600;transition:filter .15s,border-color .15s,transform .05s}
+  .btn:hover{border-color:var(--track)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);
+    box-shadow:0 1px 2px rgba(17,22,31,.12),0 6px 16px color-mix(in srgb,var(--accent) 28%,transparent)}
+  .btn.primary:hover{filter:brightness(1.07)}
+  .btn.wide{width:100%}
+  .btn.danger{color:var(--danger);border-color:color-mix(in srgb,var(--danger) 35%,var(--line))}
+  .btn.danger:hover{background:var(--danger-weak)}
+  .btn:active{transform:scale(.99)}
+
+  .note{margin:0;color:var(--muted);font-size:.79rem;line-height:1.45}
+  .note+.note{margin-top:.4rem}
+
+  .rx{max-height:17rem;overflow:auto;display:flex;flex-direction:column;gap:.4rem;padding:.6rem .95rem .9rem}
+  .rxi{background:var(--sunk);border-radius:10px;padding:.5rem .6rem;font-size:.85rem;line-height:1.35}
+  .rxi .hd{display:flex;align-items:baseline;gap:.4rem}
+  .rxi .tag{font-size:.68rem;font-weight:600;padding:.1rem .38rem;border-radius:5px;
+    background:var(--accent-weak);color:var(--accent)}
+  .rxi .tag{flex:none}
+  .rxi .id{font-family:ui-monospace,monospace;font-weight:600;min-width:0;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rxi .nm{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    font-weight:500;color:var(--text)}
+  .rxi .mt{color:var(--muted);font-size:.8rem}
+  .rxi .dist{margin-left:auto;padding-left:.3rem;font-variant-numeric:tabular-nums;
+    color:var(--accent);font-weight:600;flex:none}
+  .console{margin-top:.2rem;height:16rem;overflow-y:auto;overflow-x:hidden;
+    background:var(--sunk);border:1px solid var(--line);border-radius:10px;
+    padding:.5rem .6rem;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:.74rem;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere;
+    user-select:all;-webkit-user-select:all}
+  .console .l{display:block}
+  .console .t{color:var(--muted)}
+  .console .d{font-weight:700}
+  .console .out .d{color:var(--accent)}
+  .console .in  .d{color:var(--ok)}
+  .console .empty{color:var(--muted);font-family:inherit;font-size:.8rem}
+  .linkbtn{background:none;border:0;padding:.2rem .3rem;font:inherit;color:var(--muted);
+    text-decoration:underline;text-underline-offset:2px;cursor:pointer;border-radius:4px}
+  .linkbtn:hover{color:var(--text)}
+  .rxempty{color:var(--faint);font-size:.85rem;padding:.6rem .95rem 1rem}
+
+  #toast{position:fixed;left:50%;bottom:calc(1.1rem + env(safe-area-inset-bottom));
+    transform:translate(-50%,1.5rem);opacity:0;pointer-events:none;transition:.2s;
+    background:var(--text);color:var(--bg);padding:.55rem .95rem;border-radius:10px;
+    font-size:.87rem;z-index:50;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+  #toast.show{opacity:1;transform:translate(-50%,0)}
+
+  footer{display:flex;align-items:center;justify-content:space-between;gap:.6rem;color:var(--faint);font-size:.76rem;padding:.4rem .25rem 1.4rem}
+</style>
+
+<header>
+  <div class=brand>
+    <i class=mark aria-hidden=true></i>
+    <span>
+      <b id=devName>Breezedude Beacon</b>
+      <span class=sub><i class=led></i><span id=devSub></span><span id=savedNote class=saved></span></span>
+    </span>
+  </div>
+  <div class=tools>
+    <button id=langBtn class="iconbtn lang" data-i18n-title=language></button>
+    <button id=themeBtn class=iconbtn data-i18n-title=theme>
+      <svg class=moon width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 14.5A8.3 8.3 0 019.5 4 8.3 8.3 0 1020 14.5z"/></svg>
+      <svg class=sun width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4"/></svg>
+    </button>
+    <button id=linkBtn class="iconbtn hangup" data-i18n-title=disconnect hidden>
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 17l-5 5V12l-5 5"/><path d="M14.5 9.5L17 7l-5-5v4.5"/><path d="M3 3l18 18"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="hero only-off">
+    <i class=mark aria-hidden=true></i>
+    <button id=connBtn class="btn primary wide">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7l10 10-5 5V2l5 5L7 17"/></svg>
+      <span data-i18n=connect></span>
+    </button>
+  </section>
+
+  <section class="card only-pending">
+    <div class=confirm>
+      <div class=press></div>
+      <h1 data-i18n=confirmTitle></h1>
+      <p data-i18n-html=confirmText></p>
+      <p class=note data-i18n=confirmNote></p>
+    </div>
+  </section>
+
+  <div class=only-on>
+
+    <p class="seclabel first" data-i18n=secStatus></p>
+
+    <section class=card>
+      <div class=stats>
+        <div class=stat><span>GPS</span><b id=stFix>–</b></div>
+        <div class=stat><span data-i18n=satellites></span><b id=stSat>–</b></div>
+        <div class=stat><span data-i18n=battery></span><b id=stBat>–</b><i class=gauge id=batGauge><i></i></i></div>
+        <div class=stat><span data-i18n=idleFor></span><b id=stIdle>–</b></div>
+        <div class="stat wide"><span data-i18n=position></span><b id=stPos>–</b></div>
+        <div class="stat wide"><span data-i18n=coordinates></span><b id=stCoord class=mono>–</b></div>
+      </div>
+      <div class=chiprow><span class=k data-i18n=sending></span><span class=chips id=txChips></span></div>
+      <div class=chiprow><span class=k data-i18n=receiving></span><span class=chips id=rxChips></span></div>
+    </section>
+
+    <details class=card id=rxBox>
+      <summary><span class=ico><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M5 12a7 7 0 017 7"/><path d="M5 5a14 14 0 0114 14"/><circle cx="6" cy="18" r="1.7" fill="currentColor" stroke="none"/></svg></span><span data-i18n=stations></span><span class=tally id=rxTally>–</span></summary>
+      <div class=rx id=rxList></div>
+    </details>
+
+    <p class=seclabel data-i18n=secSettings></p>
+
+    <details class=card open>
+      <summary><span class=ico><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="8" r="3.4"/><path d="M4.5 20a7.5 7.5 0 0115 0"/></svg></span><span data-i18n=pilot></span></summary>
+      <div class=row>
+        <div class=lb><b data-i18n=name></b><small data-i18n=nameHint></small></div>
+        <div class=ctl><input id=pilot class=w-txt type=text maxlength=23></div>
+      </div>
+      <div class=row>
+        <div class=lb><b data-i18n=aircraft></b></div>
+        <div class=ctl><select id=acType class=w-sel>
+          <option value=0 data-i18n=ac0></option>
+          <option value=1 data-i18n=ac1></option>
+          <option value=2 data-i18n=ac2></option>
+          <option value=3 data-i18n=ac3></option>
+          <option value=4 data-i18n=ac4></option>
+          <option value=5 data-i18n=ac5></option>
+          <option value=6 data-i18n=ac6></option>
+          <option value=7 data-i18n=ac7></option>
+        </select></div>
+      </div>
+    </details>
+
+    <details class=card>
+      <summary><span class=ico><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 19V5"/><path d="M7 10l5-5 5 5"/></svg></span><span data-i18n=transmit></span><span class=tally id=txTally></span></summary>
+      <div class="row sw-row">
+        <div class=lb><b>FANET</b></div>
+        <div class=ctl><label><input id=fanet type=checkbox class=hid><span class=sw></span></label></div>
+      </div>
+      <div class="row sw-row">
+        <div class=lb><b>FLARM</b></div>
+        <div class=ctl><label><input id=flarm type=checkbox class=hid><span class=sw></span></label></div>
+      </div>
+      <div class="row sw-row">
+        <div class=lb><b>ADS-L</b></div>
+        <div class=ctl><label><input id=adsl type=checkbox class=hid><span class=sw></span></label></div>
+      </div>
+      <div class="row sw-row">
+        <div class=lb><b data-i18n=online></b><small data-i18n=onlineHint></small></div>
+        <div class=ctl><label><input id=online type=checkbox class=hid><span class=sw></span></label></div>
+      </div>
+      <div class="row sw-row">
+        <div class=lb><b data-i18n=lbt></b><small data-i18n=lbtHint></small></div>
+        <div class=ctl><label><input id=lbt type=checkbox class=hid><span class=sw></span></label></div>
+      </div>
+      <div class=row>
+        <div class=lb><b data-i18n=positionEvery></b></div>
+        <div class=ctl><input id=trackS class=w-num type=number min=1 max=60 step=.5><em>s</em></div>
+      </div>
+      <div class=row>
+        <div class=lb><b data-i18n=txPower></b></div>
+        <div class=ctl><span class=slide><input id=txPower type=range min=-9 max=22 step=1><span class=out id=txPowerOut></span></span></div>
+      </div>
+    </details>
+
+    <details class=card>
+      <summary><span class=ico><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 5v14"/><path d="M7 14l5 5 5-5"/></svg></span><span data-i18n=receive></span><span class=tally id=rxTally2></span></summary>
+      <div class="row sw-row">
+        <div class=lb><b data-i18n=rxEnable></b><small data-i18n=rxHint></small></div>
+        <div class=ctl><label><input id=rxOn type=checkbox class=hid><span class=sw></span></label></div>
+      </div>
+      <div class=row id=rxProtoRow>
+        <div class=lb><b data-i18n=protocol></b><small data-i18n=protocolHint></small></div>
+        <div class=ctl><select id=rxProto class=w-sel>
+          <option value=0>FLARM</option>
+          <option value=1 data-i18n=rxFanet></option>
+          <option value=2>ADS-L</option>
+        </select></div>
+      </div>
+    </details>
+
+    <details class=card>
+      <summary><span class=ico><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><path d="M8 9h8M8 13h5"/></svg></span><span data-i18n=identifiers></span></summary>
+      <div class=row>
+        <div class=lb><b>FANET</b><small data-i18n=vendorDevice></small></div>
+        <div class=ctl>
+          <input id=vendor class="mono w-hex" type=text spellcheck=false>
+          <input id=devId class="mono w-hex4" type=text spellcheck=false>
+        </div>
+      </div>
+      <div class=row>
+        <div class=lb><b>FLARM</b><small data-i18n=vendorDevice></small></div>
+        <div class=ctl>
+          <input id=fVendor class="mono w-hex" type=text spellcheck=false>
+          <input id=fDevId class="mono w-hex4" type=text spellcheck=false>
+        </div>
+      </div>
+      <div class=row>
+        <div class=lb><b>ADS-L</b><small data-i18n=adslHint></small></div>
+        <div class=ctl><input id=adslAddr class="mono w-hex4" type=text spellcheck=false></div>
+      </div>
+      <div class=row>
+        <div class=lb><b data-i18n=adslType></b></div>
+        <div class=ctl><select id=adslTable class=w-sel>
+          <option value=7 data-i18n=ognDefault></option>
+          <option value=8>FANET</option>
+          <option value=6>FLARM</option>
+          <option value=5>ICAO</option>
+        </select></div>
+      </div>
+      <div class=row>
+        <div class=lb><b data-i18n=flarmFormat></b></div>
+        <div class=ctl><span class=seg id=fProtoSeg>
+          <label><input type=radio name=fProto value=0><span data-i18n=mixed></span></label>
+          <label><input type=radio name=fProto value=6><span>V6</span></label>
+          <label><input type=radio name=fProto value=7><span>V7</span></label>
+        </span></div>
+      </div>
+      <div class=pad style="padding-top:.2rem">
+        <p class=note data-i18n=idNote></p>
+      </div>
+    </details>
+
+    <details class=card>
+      <summary><span class=ico><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 3a6 6 0 016 6c0 4 2 5 2 5H4s2-1 2-5a6 6 0 016-6z"/><path d="M10 19a2 2 0 004 0"/></svg></span><span data-i18n=device></span></summary>
+      <div class=row>
+        <div class=lb><b data-i18n=sounds></b></div>
+        <div class=ctl><span class=slide><input id=buzzer type=range min=0 max=100 step=5><span class=out id=buzzerOut></span></span></div>
+      </div>
+      <div class=row>
+        <div class=lb><b data-i18n=autoOff></b><small data-i18n=zeroOff></small></div>
+        <div class=ctl><input id=autoOffMin class=w-num type=number min=0 max=120 step=1><em>min</em></div>
+      </div>
+      <div class=row>
+        <div class=lb><b data-i18n=cutoff></b></div>
+        <div class=ctl><input id=lowVoltV class=w-num type=number min=2.8 max=4.2 step=.05><em>V</em></div>
+      </div>
+      <div class=row>
+        <div class=lb><b data-i18n=nameEvery></b><small data-i18n=zeroNever></small></div>
+        <div class=ctl><input id=nameS class=w-num type=number min=0 max=2000 step=1><em>s</em></div>
+      </div>
+      <div class="row sw-row">
+        <div class=lb><b data-i18n=gpsStandby></b><small data-i18n=gpsStandbyHint></small></div>
+        <div class=ctl><label><input id=gnssVrtc type=checkbox class=hid><span class=sw></span></label></div>
+      </div>
+    </details>
+
+    <details class=card>
+      <summary><span class=ico><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 15V4"/><path d="M8 8l4-4 4 4"/><path d="M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3"/></svg></span><span>Firmware</span></summary>
+      <div class=pad>
+        <p class=note data-i18n-html=fwNote1></p>
+        <p class=note data-i18n=fwNote2></p>
+        <button id=bootBtn class="btn danger wide" style="margin-top:.8rem" data-i18n=bootBtn></button>
+      </div>
+    </details>
+
+    <details class=card id=dbgBox hidden>
+      <summary><span class=ico><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4h8l-1 4H9z"/><path d="M9 8v3a3 3 0 006 0V8"/><path d="M12 14v6"/><path d="M6 12H3M21 12h-3M6 18H4M20 18h-2"/></svg></span><span>Debug</span><span class=tally id=dbgTally></span></summary>
+      <div class="row sw-row">
+        <div class=lb><b data-i18n=dbgTx></b><small data-i18n=dbgTxHint></small></div>
+        <div class=ctl><label><input id=dbgTx type=checkbox class=hid checked><span class=sw></span></label></div>
+      </div>
+      <div class="row sw-row">
+        <div class=lb><b data-i18n=dbgRx></b><small data-i18n=dbgRxHint></small></div>
+        <div class=ctl><label><input id=dbgRx type=checkbox class=hid checked><span class=sw></span></label></div>
+      </div>
+      <div class="row sw-row">
+        <div class=lb><b data-i18n=dbgNmea></b><small data-i18n=dbgNmeaHint></small></div>
+        <div class=ctl><label><input id=dbgNmea type=checkbox class=hid><span class=sw></span></label></div>
+      </div>
+      <div class=pad>
+        <div id=dbgLog class=console></div>
+        <button id=dbgClear class="btn wide" style="margin-top:.6rem" data-i18n=clear></button>
+      </div>
+    </details>
+
+    <footer>
+      <span id=footVer></span>
+      <button id=dbgBtn class=linkbtn></button>
+    </footer>
+  </div>
+</main>
+
+<div id=toast></div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+// ---- language --------------------------------------------------------------
+// German and English. The browser's preference decides, the button in the
+// header overrides it, and the override is remembered like the theme.
+const TEXT = {
+  de: {
+    language: 'Sprache', theme: 'Hell / dunkel', disconnect: 'Trennen',
+    notConnected: 'nicht verbunden', connected: 'verbunden',
+    awaiting: 'wartet auf Bestätigung', saved: 'gespeichert',
+    connect: 'Beacon verbinden',
+    confirmTitle: 'Am Gerät bestätigen',
+    confirmText: 'Dieses Gerät ist dem Beacon noch nicht bekannt. Drücke am Beacon <b>kurz die Taste</b>, um die Verbindung zu erlauben.',
+    confirmNote: 'Solange das nicht passiert, gibt der Beacon weder Einstellungen noch Position heraus.',
+    secStatus: 'Status', secSettings: 'Einstellungen',
+    satellites: 'Satelliten', battery: 'Akku', idleFor: 'Keine Bewegung seit',
+    position: 'Position', coordinates: 'Koordinaten',
+    sending: 'Sendet', receiving: 'Empfängt', stations: 'Empfangene Stationen',
+    pilot: 'Pilot', name: 'Name', nameHint: 'was andere Piloten sehen', aircraft: 'Luftfahrzeug',
+    ac0: 'Sonstiges', ac1: 'Gleitschirm', ac2: 'Drachen', ac3: 'Ballon',
+    ac4: 'Segelflugzeug', ac5: 'Motorflugzeug', ac6: 'Hubschrauber', ac7: 'Drohne',
+    transmit: 'Senden', online: 'Online-Sichtbarkeit',
+    onlineHint: 'Deine Trackingdaten dürfen im Web angezeigt werden',
+    lbt: 'Vor dem Senden lauschen', lbtHint: 'erlaubt mehr Sendezeit; aus: höchstens 1 %, FANET dann seltener',
+    positionEvery: 'Position alle', txPower: 'Sendeleistung',
+    receive: 'Empfangen', rxEnable: 'Empfang aktivieren',
+    rxHint: 'läuft dauerhaft und kostet spürbar Akku',
+    protocol: 'Protokoll', protocolHint: 'nur eines gleichzeitig möglich',
+    rxFanet: 'FANET, auch Wetter',
+    identifiers: 'Kennungen', vendorDevice: 'Hersteller · Gerät',
+    adslHint: '0 = aus der FLARM-Kennung ableiten', adslType: 'ADS-L Adresstyp',
+    ognDefault: 'OGN (Standard)', flarmFormat: 'FLARM-Format', mixed: 'Gemischt',
+    idNote: 'Die Adressen werden aus der Hardwareadresse deines Geräts abgeleitet. Du musst sie normalerweise nicht ändern. Falls du sie doch ändern möchtest, kannst du das hier tun.',
+    device: 'Gerät', sounds: 'Signaltöne', autoOff: 'Auto-Aus ohne Bewegung', zeroOff: '0 = aus',
+    cutoff: 'Abschaltspannung', nameEvery: 'Name senden alle', zeroNever: '0 = nie',
+    gpsStandby: 'GPS-Standby', gpsStandbyHint: 'schnellerer Start, etwas Akku im Ruhezustand',
+    fwNote1: 'Das Gerät startet in den Bootloader und erscheint als USB-Laufwerk. Dort <b>firmware.uf2</b> hineinkopieren – danach startet es von selbst neu.',
+    fwNote2: 'Ohne USB-Kabel ist das ungefährlich: der Bootloader wartet etwa 3 Sekunden auf eine USB-Verbindung und startet dann wieder normal.',
+    bootBtn: 'Bootloader starten',
+    bootConfirm: 'Beacon in den Bootloader starten?\n\nOhne angestecktes USB-Kabel startet er nach etwa 3 Sekunden von selbst wieder normal.',
+    bootToast: 'Startet in den Bootloader',
+    dbgTx: 'Gesendet', dbgTxHint: 'vom Browser an den Beacon',
+    dbgRx: 'Empfangen', dbgRxHint: 'vom Beacon an den Browser',
+    dbgNmea: 'NMEA mitschneiden', dbgNmeaHint: 'zeigt zusätzlich, was eine Navigations-App bekommt',
+    clear: 'Leeren', dbgEmpty: 'Noch nichts übertragen.',
+    dbgShow: 'Debug aktivieren', dbgHide: 'Debug ausblenden',
+    searching: 'sucht', charging: 'lädt', noSensor: 'kein Sensor',
+    noPosition: 'noch keine Position', off: 'aus', nActive: '{0} aktiv',
+    power: ['niedrig', 'mittel', 'hoch', 'max'], volume: ['aus', 'leise', 'mittel', 'laut'],
+    weather: 'Wetter', wind: 'Wind {0} km/h aus {1}°', gusts: 'Böen {0}', humidity: '{0} % rF',
+    batteryPct: 'Akku {0} %', noReadings: 'keine Messwerte', nameOnly: 'nur Name empfangen',
+    unknown: 'unbekannt', ago: 'vor {0} s', nothingHeard: 'Noch nichts empfangen.',
+    acft: ['–', 'Segelflug', 'Schlepp', 'Hubschrauber', 'Fallschirm', 'Absetzer', 'Drachen',
+           'Gleitschirm', 'Motorflug', 'Jet', 'unbekannt', 'Ballon', 'Luftschiff', 'Drohne', '–', 'Objekt'],
+    connFailed: 'Verbindung fehlgeschlagen', notConfirmed: 'Nicht bestätigt – Verbindung getrennt',
+    saveFailed: 'Speichern fehlgeschlagen', checkInput: 'Eingabe prüfen',
+    versionMismatch: 'Seite und Firmware passen nicht zusammen',
+  },
+  en: {
+    language: 'Language', theme: 'Light / dark', disconnect: 'Disconnect',
+    notConnected: 'not connected', connected: 'connected',
+    awaiting: 'waiting for confirmation', saved: 'saved',
+    connect: 'Connect beacon',
+    confirmTitle: 'Confirm on the device',
+    confirmText: 'The beacon does not know this device yet. <b>Press its button briefly</b> to allow the connection.',
+    confirmNote: 'Until then the beacon gives out neither settings nor position.',
+    secStatus: 'Status', secSettings: 'Settings',
+    satellites: 'Satellites', battery: 'Battery', idleFor: 'No movement for',
+    position: 'Position', coordinates: 'Coordinates',
+    sending: 'Sending', receiving: 'Receiving', stations: 'Received stations',
+    pilot: 'Pilot', name: 'Name', nameHint: 'what other pilots see', aircraft: 'Aircraft',
+    ac0: 'Other', ac1: 'Paraglider', ac2: 'Hang glider', ac3: 'Balloon',
+    ac4: 'Glider', ac5: 'Powered aircraft', ac6: 'Helicopter', ac7: 'Drone',
+    transmit: 'Transmit', online: 'Online visibility',
+    onlineHint: 'Your tracking data may be shown on the web',
+    lbt: 'Listen before talk', lbtHint: 'allows more airtime; off: at most 1 %, FANET less often',
+    positionEvery: 'Position every', txPower: 'Transmit power',
+    receive: 'Receive', rxEnable: 'Enable reception',
+    rxHint: 'runs continuously and noticeably drains the battery',
+    protocol: 'Protocol', protocolHint: 'only one at a time',
+    rxFanet: 'FANET, including weather',
+    identifiers: 'Identifiers', vendorDevice: 'Manufacturer · device',
+    adslHint: '0 = derive from the FLARM identifier', adslType: 'ADS-L address type',
+    ognDefault: 'OGN (default)', flarmFormat: 'FLARM format', mixed: 'Mixed',
+    idNote: 'The addresses are derived from the hardware address of your device. You normally do not need to change them. Should you want to, you can do so here.',
+    device: 'Device', sounds: 'Sounds', autoOff: 'Auto-off without movement', zeroOff: '0 = off',
+    cutoff: 'Cut-off voltage', nameEvery: 'Send name every', zeroNever: '0 = never',
+    gpsStandby: 'GPS standby', gpsStandbyHint: 'faster start, a little battery while off',
+    fwNote1: 'The device restarts into the bootloader and appears as a USB drive. Copy <b>firmware.uf2</b> onto it – it then restarts by itself.',
+    fwNote2: 'Without a USB cable this is harmless: the bootloader waits about 3 seconds for a USB connection and then starts normally again.',
+    bootBtn: 'Start bootloader',
+    bootConfirm: 'Restart the beacon into the bootloader?\n\nWith no USB cable attached it starts normally again by itself after about 3 seconds.',
+    bootToast: 'Restarting into the bootloader',
+    dbgTx: 'Sent', dbgTxHint: 'from the browser to the beacon',
+    dbgRx: 'Received', dbgRxHint: 'from the beacon to the browser',
+    dbgNmea: 'Capture NMEA', dbgNmeaHint: 'also shows what a navigation app receives',
+    clear: 'Clear', dbgEmpty: 'Nothing transferred yet.',
+    dbgShow: 'Enable debug', dbgHide: 'Hide debug',
+    searching: 'searching', charging: 'charging', noSensor: 'no sensor',
+    noPosition: 'no position yet', off: 'off', nActive: '{0} active',
+    power: ['low', 'medium', 'high', 'max'], volume: ['off', 'quiet', 'medium', 'loud'],
+    weather: 'Weather', wind: 'Wind {0} km/h from {1}°', gusts: 'Gusts {0}', humidity: '{0} % RH',
+    batteryPct: 'Battery {0} %', noReadings: 'no readings', nameOnly: 'name only',
+    unknown: 'unknown', ago: '{0} s ago', nothingHeard: 'Nothing received yet.',
+    acft: ['–', 'Glider', 'Tow plane', 'Helicopter', 'Parachute', 'Drop plane', 'Hang glider',
+           'Paraglider', 'Powered', 'Jet', 'unknown', 'Balloon', 'Airship', 'Drone', '–', 'Object'],
+    connFailed: 'Connection failed', notConfirmed: 'Not confirmed – disconnected',
+    saveFailed: 'Saving failed', checkInput: 'Check the input',
+    versionMismatch: 'Page and firmware do not match',
+  },
+};
+
+function detectLanguage(){
+  const saved = localStorage.getItem('bd-lang');
+  if (TEXT[saved]) return saved;
+  for (const tag of (navigator.languages && navigator.languages.length
+                     ? navigator.languages : [navigator.language || 'en'])){
+    const code = String(tag).toLowerCase().slice(0, 2);
+    if (TEXT[code]) return code;
+  }
+  return 'en';
+}
+
+let lang = detectLanguage();
+
+// Looks a text up and fills in {0}, {1}, ... from the arguments.
+function t(key, ...args){
+  const s = TEXT[lang][key];
+  return typeof s === 'string' ? s.replace(/\{(\d)\}/g, (_, i) => args[i]) : s;
+}
+
+// Everything that depends on the language and was not written into the page by
+// an attribute is redrawn by these, registered where the pieces are defined.
+const redraw = [];
+
+function applyLanguage(){
+  document.documentElement.lang = lang;
+  for (const el of document.querySelectorAll('[data-i18n]'))      el.textContent = t(el.dataset.i18n);
+  for (const el of document.querySelectorAll('[data-i18n-html]')) el.innerHTML   = t(el.dataset.i18nHtml);
+  for (const el of document.querySelectorAll('[data-i18n-title]')){
+    el.title = t(el.dataset.i18nTitle);
+    el.setAttribute('aria-label', el.title);
+  }
+  // The button shows the language it switches to.
+  $('langBtn').textContent = lang === 'de' ? 'EN' : 'DE';
+  for (const fn of redraw) fn();
+}
+
+$('langBtn').onclick = () => {
+  lang = lang === 'de' ? 'en' : 'de';
+  localStorage.setItem('bd-lang', lang);
+  applyLanguage();
+};
+
+// ---- theme -----------------------------------------------------------------
+// Three states: explicit light, explicit dark, or follow the system.
+(function(){
+  const saved = localStorage.getItem('bd-theme');
+  if (saved) document.documentElement.dataset.theme = saved;
+  $('themeBtn').onclick = () => {
+    const sysDark = matchMedia('(prefers-color-scheme: dark)').matches;
+    const cur  = document.documentElement.dataset.theme || (sysDark ? 'dark' : 'light');
+    const next = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset.theme = next;
+    localStorage.setItem('bd-theme', next);
+  };
+})();
+
+function toast(msg, ms = 1700){
+  const el = $('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.classList.remove('show'), ms);
+}
+
+// ---- debug console ---------------------------------------------------------
+// Off by default and hidden entirely: it is for working out why something does
+// not behave, not for normal use. The choice is remembered like the theme.
+const DBG_MAX = 300;
+let dbgOn = localStorage.getItem('bd-debug') === '1';
+
+function setDebug(on){
+  dbgOn = on;
+  localStorage.setItem('bd-debug', on ? '1' : '0');
+  $('dbgBox').hidden = !on;
+  $('dbgBtn').textContent = t(on ? 'dbgHide' : 'dbgShow');
+  if (on) $('dbgBox').open = true;
+}
+
+const stamp = () => {
+  const d = new Date();
+  return d.toTimeString().slice(0, 8) + '.' +
+         String(d.getMilliseconds()).padStart(3, '0');
+};
+
+function dbg(dir, text){
+  if (!dbgOn) return;
+  if (dir === 'out' && !$('dbgTx').checked) return;
+  if (dir === 'in'  && !$('dbgRx').checked) return;
+
+  const box = $('dbgLog');
+  const empty = box.querySelector('.empty');
+  if (empty) empty.remove();
+
+  // Stick to the bottom only while the reader is already there, so scrolling
+  // back through the log is not fought by every new line.
+  const atBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 24;
+
+  const line = document.createElement('span');
+  line.className = 'l ' + dir;
+  const arrow = dir === 'out' ? '→' : '←';
+  line.innerHTML = '<span class=t>' + stamp() + '</span> ' +
+                   '<span class=d>' + arrow + '</span> ';
+  line.appendChild(document.createTextNode(String(text).replace(/[\r\n]+$/, '')));
+  box.appendChild(line);
+
+  while (box.childElementCount > DBG_MAX) box.removeChild(box.firstElementChild);
+  $('dbgTally').textContent = box.childElementCount;
+
+  if (atBottom) box.scrollTop = box.scrollHeight;
+}
+
+function dbgClear(){
+  const empty = document.createElement('span');
+  empty.className = 'empty';
+  empty.textContent = t('dbgEmpty');
+  $('dbgLog').replaceChildren(empty);
+  $('dbgTally').textContent = '';
+}
+
+$('dbgBtn').onclick   = () => setDebug(!dbgOn);
+$('dbgNmea').onchange = () => listenNmea($('dbgNmea').checked);
+$('dbgClear').onclick = dbgClear;
+
+redraw.push(() => {
+  $('dbgBtn').textContent = t(dbgOn ? 'dbgHide' : 'dbgShow');
+  const empty = $('dbgLog').querySelector('.empty');
+  if (empty) empty.textContent = t('dbgEmpty');
+});
+
+// ---- BLE -------------------------------------------------------------------
+// Two services. This page talks on the configuration service, one JSON object
+// per line each way. The serial service carries the NMEA stream for navigation
+// apps; the debug console can listen in on it.
+const CFG_SVC = '88c00001-13a4-4aab-998f-26ee246f7e7b',
+      CFG_RX  = '88c00002-13a4-4aab-998f-26ee246f7e7b',   // we write here
+      CFG_TX  = '88c00003-13a4-4aab-998f-26ee246f7e7b',   // notifications
+      NUS     = '6e400001-b5a3-f393-e0a9-e50e24dcca9e',
+      NUS_TX  = '6e400003-b5a3-f393-e0a9-e50e24dcca9e';
+
+const PROTOCOL = 1;
+
+// The smallest packet every link carries. The device says in its greeting how
+// much more this one takes.
+const CHUNK_MIN = 20, CHUNK_MAX = 244;
+
+let dev = null, rxChar = null, nmeaChar = null, chunk = CHUNK_MIN;
+
+// ---- key -------------------------------------------------------------------
+// The beacon lets a client configure it once the client has shown that it
+// holds a key the beacon handed out, and it hands one out only after a press
+// on its button. The key is kept here, per beacon, and never sent back: each
+// connection the beacon sends a number and gets the HMAC of it in return.
+let deviceId = '', keyTried = false, pairAsked = false;
+
+const keySlot = id => 'bd-key-' + id;
+function loadKey(id){
+  try { return id ? localStorage.getItem(keySlot(id)) : null; } catch(e){ return null; }
+}
+function saveKey(id, key){
+  try { if (id) localStorage.setItem(keySlot(id), key); } catch(e){ /* pairs again next time */ }
+}
+
+const fromHex = text => new Uint8Array((text.match(/../g) || []).map(b => parseInt(b, 16)));
+const toHex   = data => [...data].map(b => b.toString(16).padStart(2, '0')).join('');
+
+async function answerChallenge(keyHex, nonceHex){
+  const key = await crypto.subtle.importKey(
+    'raw', fromHex(keyHex), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  return toHex(new Uint8Array(await crypto.subtle.sign('HMAC', key, fromHex(nonceHex))));
+}
+
+// One operation at a time: some platforms refuse a second one while the first
+// is still in the air, and two messages written at once would interleave.
+let gattTail = Promise.resolve();
+function queued(op){
+  const run = gattTail.then(op, op);
+  gattTail = run.catch(() => {});
+  return run;
+}
+
+function send(obj){
+  return queued(async () => {
+    if (!rxChar) return;
+    const text = JSON.stringify(obj);
+    dbg('out', text);
+    const data = new TextEncoder().encode(text + '\n');
+    // The firmware reassembles on the newline.
+    for (let i = 0; i < data.length; i += chunk){
+      const part = data.slice(i, i + chunk);
+      try      { await rxChar.writeValueWithoutResponse(part); }
+      catch(e) { await rxChar.writeValueWithResponse(part); }
+    }
+  });
+}
+
+// Turns notifications into lines. The decoder is kept between packets, so a
+// character split across two of them still comes out whole.
+function lineReader(onText){
+  const decoder = new TextDecoder();
+  let buf = '';
+  return e => {
+    buf += decoder.decode(e.target.value, { stream: true });
+    let i;
+    while ((i = buf.indexOf('\n')) >= 0){
+      const line = buf.slice(0, i).trim();
+      buf = buf.slice(i + 1);
+      if (line) onText(line);
+    }
+    if (buf.length > 4000) buf = '';
+  };
+}
+
+// ---- link state ------------------------------------------------------------
+let awaitingAuth = false;
+let firmware = '';
+let hasMotion = true;
+
+function renderLink(){
+  const on = !document.body.classList.contains('off');
+  $('devSub').textContent = !on ? t('notConnected')
+                          : awaitingAuth ? t('awaiting')
+                          : t('connected') + (firmware ? ' · ' + firmware : '');
+}
+redraw.push(renderLink);
+
+function setConnected(on, name){
+  document.body.classList.toggle('off', !on);
+  $('linkBtn').hidden = !on;
+  $('devName').textContent = on ? (name || 'Beacon') : 'Breezedude Beacon';
+  if (!on){
+    firmware = '';
+    setPending(false);
+    rxChar = null;
+    nmeaChar = null;
+    chunk = CHUNK_MIN;
+    keyTried = pairAsked = false;
+    lastStatus = null;
+    rxSeen.clear();
+    renderReceptions();
+  }
+  renderLink();
+}
+
+function setPending(on){
+  awaitingAuth = on;
+  document.body.classList.toggle('pending', on);
+  renderLink();
+}
+
+// What the beacon says while this page is not let in yet.
+async function onAuth(m){
+  if (m.ok){
+    // Let in. A key comes along only when it is a new one.
+    if (m.key) saveKey(deviceId, m.key);
+    setPending(false);
+    hello();
+    return;
+  }
+  // Repeated while it waits for its button, so this has to be idempotent.
+  if (m.wait){ setPending(true); return; }
+
+  // A challenge: answer it with the key on file, once. Without a key, or
+  // with one the beacon no longer accepts, ask for a new one, which is what
+  // makes the beacon want its button pressed.
+  if (m.dev) deviceId = m.dev;
+  const key = loadKey(deviceId);
+  if (key && !keyTried && m.nonce){
+    keyTried = true;
+    try {
+      send({ cmd: 'auth', mac: await answerChallenge(key, m.nonce) });
+      return;
+    } catch(e){ /* a key that cannot be used is as good as none */ }
+  }
+  if (!pairAsked){
+    pairAsked = true;
+    setPending(true);
+    send({ cmd: 'pair' });
+  }
+}
+
+// Opens the session. A beacon that has not let this page in yet answers with
+// a challenge instead, and the greeting is sent again once that is settled.
+function hello(){
+  chunk = CHUNK_MIN;
+  return send({ cmd: 'hello', v: PROTOCOL });
+}
+
+function onHello(m){
+  setPending(false);
+  chunk = Math.max(CHUNK_MIN, Math.min(CHUNK_MAX, Number(m.mtu) || CHUNK_MIN));
+  hasMotion = m.mot !== false;
+  if (m.fw){
+    firmware = m.fw;
+    $('footVer').textContent = 'Breezedude Beacon ' + m.fw;
+  }
+  renderLink();
+  if (m.v !== PROTOCOL) toast(t('versionMismatch'));
+  send({ cmd: 'get' });
+  if ($('dbgNmea').checked) listenNmea(true);
+}
+
+// The debug console's view of the NMEA stream: the same subscription a
+// navigation app makes, so what shows up here is what such an app receives.
+function listenNmea(on){
+  return queued(async () => {
+    if (!dev || !dev.gatt.connected) return;
+    try {
+      if (on && !nmeaChar){
+        const srv = await dev.gatt.getPrimaryService(NUS);
+        nmeaChar = await srv.getCharacteristic(NUS_TX);
+        nmeaChar.oncharacteristicvaluechanged = lineReader(line => dbg('in', line));
+      }
+      if (nmeaChar) await (on ? nmeaChar.startNotifications() : nmeaChar.stopNotifications());
+    } catch(e){ /* a debug aid; the session does not depend on it */ }
+  });
+}
+
+// How far connect() got, shown when it fails: without it, "failed" says
+// nothing about whether the beacon, the firmware or the browser is at fault.
+let step = '';
+
+async function connect(){
+  dev.ongattserverdisconnected = () => {
+    if (awaitingAuth) toast(t('notConfirmed'));
+    setConnected(false);
+  };
+
+  step = 'gatt';
+  const server = await dev.gatt.connect();
+  step = 'service';
+  const srv = await server.getPrimaryService(CFG_SVC);
+  step = 'characteristic';
+  rxChar = await srv.getCharacteristic(CFG_RX);
+  const tx = await srv.getCharacteristic(CFG_TX);
+
+  // Listener first, notifications second, otherwise the opening packets are
+  // lost.
+  step = 'notify';
+  tx.oncharacteristicvaluechanged = lineReader(line => { dbg('in', line); onLine(line); });
+  await tx.startNotifications();
+
+  step = 'hello';
+  keyTried = pairAsked = false;
+  setConnected(true, dev.name);
+  await hello();
+}
+
+$('connBtn').onclick = async () => {
+  try {
+    dev = await navigator.bluetooth.requestDevice({
+      filters: [{ namePrefix: 'Breezedude' }], optionalServices: [CFG_SVC, NUS] });
+  } catch(e){ return; }                       // the chooser was dismissed
+  try { await connect(); }
+  catch(e){
+    console.error(step, e);
+    toast(t('connFailed') + ' (' + step + ')', 6000);
+    if (dev.gatt.connected) dev.gatt.disconnect();
+    setConnected(false);
+  }
+};
+$('linkBtn').onclick = () => { if (dev && dev.gatt.connected) dev.gatt.disconnect(); };
+$('bootBtn').onclick = () => {
+  if (!confirm(t('bootConfirm'))) return;
+  send({ cmd: 'bootloader' });
+  toast(t('bootToast'));
+};
+
+// ---- incoming --------------------------------------------------------------
+function onLine(line){
+  let m;
+  try { m = JSON.parse(line); } catch(e){ return; }
+  // Anything this page does not know is left alone, so a newer firmware can
+  // say more without breaking it.
+  try {
+    if (m.r === 'hello') onHello(m);
+    if (m.r === 'cfg' && m.cfg) fillForm(m.cfg);
+    if (m.r === 'status') showStatus(m);
+    if (m.r === 'traffic' || m.r === 'weather' || m.r === 'name') addReception(m);
+    if (m.r === 'saved') noteSaved(m.ok);
+    if (m.r === 'auth')  onAuth(m);
+  } catch(e){ /* a render error must never take the link down */ }
+}
+
+let savedTimer = null;
+function noteSaved(ok){
+  if (!ok){ toast(t('saveFailed')); return; }
+  const el = $('savedNote');
+  el.textContent = '· ' + t('saved');
+  el.classList.add('on');
+  clearTimeout(savedTimer);
+  savedTimer = setTimeout(() => el.classList.remove('on'), 2200);
+}
+
+// ---- status ----------------------------------------------------------------
+const fmtIdle = s => {
+  s = Math.max(0, Math.round(s || 0));
+  if (s < 60)   return s + ' s';
+  if (s < 3600) return Math.floor(s / 60) + ' min';
+  return Math.floor(s / 3600) + ' h ' + Math.floor((s % 3600) / 60) + ' min';
+};
+
+const PROTO = ['FLARM', 'FANET', 'ADS-L'];
+let cfgNow = {};
+let lastStatus = null;
+
+const chip = (label, on, count) =>
+  '<span class="chip' + (on ? ' on' : '') + '"><span class=dot></span>' + label +
+  (on && count !== undefined ? ' <span class=n>' + count + '</span>' : '') + '</span>';
+
+function showStatus(m){
+  lastStatus = m;
+  const fix = !!m.fix;
+  $('stFix').innerHTML = fix ? '<i class="led ok"></i>Fix'
+                             : '<i class="led wait"></i><span class=dim>' + t('searching') + '</span>';
+  $('stSat').textContent = String(m.sat ?? 0);
+  $('stBat').innerHTML  = (m.batP !== undefined ? m.batP + ' %' : '–') +
+    (m.bat !== undefined ? ' <small>' + m.bat + ' V</small>' : '') +
+    (m.chg ? ' <small>' + t('charging') + '</small>' : '');
+  const pct = Math.max(0, Math.min(100, Number(m.batP) || 0));
+  $('batGauge').className = 'gauge' + (pct < 15 ? ' low' : pct < 35 ? ' mid' : '');
+  $('batGauge').firstElementChild.style.width = pct + '%';
+  $('stIdle').textContent = !hasMotion ? t('noSensor')
+                          : (m.noMot !== undefined ? fmtIdle(m.noMot) : '–');
+  $('stPos').innerHTML = fix
+    ? (m.alt ?? '–') + ' m <small>' + (m.spd ?? '–') + ' km/h · ' + (m.hdg ?? '–') + '°</small>'
+    : '<span class=dim>' + t('noPosition') + '</span>';
+
+  // Five decimals is about a metre, which is as much as this receiver can
+  // honestly claim; more digits would only look precise.
+  const havePos = fix && m.lat !== undefined && m.lon !== undefined;
+  $('stCoord').textContent = havePos
+    ? Number(m.lat).toFixed(5) + ', ' + Number(m.lon).toFixed(5)
+    : '–';
+
+  // Distances are relative to where we are now, so they follow the aircraft
+  // rather than being frozen at the moment each station was heard.
+  const moved = !ownPos || !havePos ||
+                Math.abs(ownPos.lat - m.lat) > 1e-5 || Math.abs(ownPos.lon - m.lon) > 1e-5;
+  ownPos = havePos ? { lat: Number(m.lat), lon: Number(m.lon) } : null;
+  if (moved && rxSeen.size && $('rxBox').open) renderReceptions();
+
+  // Transmit and receive on separate rows, so which is which needs no reading.
+  $('txChips').innerHTML = chip('FANET', !!cfgNow.fanet, m.tx) +
+                           chip('FLARM', !!cfgNow.flarm, m.txF) +
+                           chip('ADS-L', !!cfgNow.adsl,  m.txA);
+  $('rxChips').innerHTML = cfgNow.rxOn
+    ? chip(PROTO[cfgNow.rxProto || 0], true, rxSeen.size)
+    : '<span class=chip><span class=dot></span>' + t('off') + '</span>';
+
+  const active = ['fanet','flarm','adsl'].filter(k => cfgNow[k]).length;
+  $('txTally').textContent = active ? t('nActive', active) : t('off');
+}
+redraw.push(() => { if (lastStatus) showStatus(lastStatus); });
+
+// ---- received stations -----------------------------------------------------
+const rxSeen = new Map();
+
+// Names arrive in their own frames, minutes apart from the position they
+// belong to, so they are kept aside and applied to whatever is on record for
+// that address. Twenty is more than a busy sky produces within radio range.
+const rxNames = new Map();
+const RX_NAME_MAX = 20;
+
+function rememberName(id, name){
+  const clean = String(name || '').replace(/[<>]/g, '').trim();
+  if (!clean) return;
+  rxNames.delete(id);                       // re-insert so it counts as recent
+  rxNames.set(id, clean);
+  while (rxNames.size > RX_NAME_MAX) rxNames.delete(rxNames.keys().next().value);
+}
+
+// Our own position, kept so that received stations can be shown as a distance
+// rather than as coordinates nobody can picture.
+let ownPos = null;
+
+function distanceM(lat1, lon1, lat2, lon2){
+  const R = 6371000, rad = Math.PI / 180;
+  const mLat = (lat1 + lat2) / 2 * rad;
+  const dLat = (lat2 - lat1) * rad;
+  const dLon = (lon2 - lon1) * rad * Math.cos(mLat);
+  return Math.sqrt(dLat * dLat + dLon * dLon) * R;
+}
+
+// Below a kilometre metres are what matters, above it they are noise.
+const fmtDist = m => m < 1000 ? Math.round(m / 10) * 10 + ' m'
+                              : (m / 1000).toFixed(m < 10000 ? 1 : 0) + ' km';
+const hexId = v => '0x' + Number(v || 0).toString(16).toUpperCase().padStart(6, '0');
+
+function addReception(m){
+  // Keyed on the address alone: a weather station that also sends its name is
+  // one station, not two entries that happen to share a number.
+  const key = m.id;
+  const prev = rxSeen.get(key) || {};
+  const entry = Object.assign({}, prev, { id: m.id });
+
+  // What was received is kept as it came, and turned into words when it is
+  // drawn, so the list follows a change of language.
+  if (m.r === 'weather')      entry.weather = m;
+  else if (m.r === 'traffic') entry.traffic = m;
+  else                        rememberName(m.id, m.name);
+
+  // A frame that does not carry a value must not erase the one on record: a
+  // name says nothing about where the station is or how well it was heard.
+  if (m.lat  !== undefined){ entry.lat = Number(m.lat); entry.lon = Number(m.lon); }
+  if (m.rssi !== undefined) entry.rssi = m.rssi;
+
+  // A report replayed from the device when the session opened says how long
+  // ago it was heard, so it does not appear as if it had just come in.
+  const at = Date.now() - (Number(m.age) || 0) * 1000;
+  entry.at = Math.max(at, prev.at || 0);
+
+  rxSeen.set(key, entry);
+  renderReceptions();
+}
+
+function describeReception(v){
+  if (v.weather){
+    const m = v.weather, p = [];
+    if (m.temp  !== undefined) p.push(m.temp + ' °C');
+    if (m.wind  !== undefined) p.push(t('wind', m.wind, m.wdir ?? '?'));
+    if (m.gust  !== undefined) p.push(t('gusts', m.gust));
+    if (m.hum   !== undefined) p.push(t('humidity', m.hum));
+    if (m.press !== undefined) p.push(m.press + ' hPa');
+    if (m.bat   !== undefined) p.push(t('batteryPct', m.bat));
+    return { tag: t('weather'), body: p.join(' · ') || t('noReadings') };
+  }
+  if (v.traffic){
+    const m = v.traffic, p = [];
+    if (m.lat !== undefined) p.push(Number(m.lat).toFixed(4) + ', ' + Number(m.lon).toFixed(4));
+    if (m.alt !== undefined) p.push(m.alt + ' m');
+    if (m.spd !== undefined) p.push(m.spd + ' km/h');
+    if (m.clb !== undefined) p.push((m.clb > 0 ? '+' : '') + m.clb + ' m/s');
+    return { tag: m.src || 'RF',
+             body: (t('acft')[m.type] || t('unknown')) + (p.length ? ' · ' + p.join(' · ') : '') };
+  }
+  return { tag: 'RF', body: t('nameOnly') };
+}
+
+function renderReceptions(){
+  // Nearest first while we know where we are, most recent first otherwise:
+  // when something is close by, that matters more than when it was heard.
+  const items = [...rxSeen.values()].sort((a, b) => {
+    if (ownPos){
+      const da = (a.lat !== undefined) ? distanceM(ownPos.lat, ownPos.lon, a.lat, a.lon) : Infinity;
+      const db = (b.lat !== undefined) ? distanceM(ownPos.lat, ownPos.lon, b.lat, b.lon) : Infinity;
+      if (da !== db) return da - db;
+    }
+    return b.at - a.at;
+  }).slice(0, 25);
+  $('rxTally').textContent = items.length || '–';
+  renderRxTally();
+
+  const box = $('rxList');
+  if (!items.length){ box.innerHTML = '<div class=rxempty>' + t('nothingHeard') + '</div>'; return; }
+
+  const now = Date.now();
+  box.innerHTML = items.map(v => {
+    const age  = Math.round((now - v.at) / 1000);
+    const rssi = (v.rssi !== undefined && v.rssi !== 0) ? ' · ' + v.rssi + ' dBm' : '';
+    // Without our own fix there is nothing to measure from, so the distance is
+    // left out rather than guessed.
+    const dist = (ownPos && v.lat !== undefined && v.lon !== undefined)
+      ? '<span class=dist>' + fmtDist(distanceM(ownPos.lat, ownPos.lon, v.lat, v.lon)) + '</span>'
+      : '';
+    // Looked up now rather than stored: a name that arrives later belongs to
+    // everything already on record for that address.
+    const name = rxNames.get(v.id);
+    const title = hexId(v.id) + (name ? ' <span class=nm>' + name + '</span>' : '');
+    const d = describeReception(v);
+    return '<div class=rxi><div class=hd><span class=tag>' + d.tag + '</span>' +
+           '<span class=id>' + title + '</span>' + dist + '</div>' +
+           '<div class=mt>' + d.body + '</div>' +
+           '<div class=mt>' + t('ago', age) + rssi + '</div></div>';
+  }).join('');
+}
+redraw.push(renderReceptions);
+
+// Ages the list and drops stations that went quiet.
+setInterval(() => {
+  if (!rxSeen.size) return;
+  const cutoff = Date.now() - 300000;
+  for (const [k, v] of rxSeen) if (v.at < cutoff) rxSeen.delete(k);
+  if ($('rxBox').open) renderReceptions();
+}, 5000);
+
+// ---- form ------------------------------------------------------------------
+const PLAIN = ['pilot','acType','online','fanet','flarm','adsl','lbt','adslTable','gnssVrtc','rxOn','rxProto'];
+const HEXF  = { vendor: 2, devId: 4, fVendor: 2, fDevId: 4, adslAddr: 6 };
+
+const hex   = (v, d) => '0x' + Number(v || 0).toString(16).toUpperCase().padStart(d, '0');
+const unhex = s => { const n = parseInt(String(s).trim().replace(/^0x/i, ''), 16); return isNaN(n) ? 0 : n; };
+
+let filling = false;
+
+function fillForm(c){
+  filling = true;
+  cfgNow = Object.assign({}, cfgNow, c);
+
+  for (const k of PLAIN){
+    const el = $(k); if (!el || c[k] === undefined) continue;
+    if (el.type === 'checkbox') el.checked = !!c[k]; else el.value = c[k];
+  }
+  for (const [k, d] of Object.entries(HEXF))
+    if (c[k] !== undefined && $(k)) $(k).value = hex(c[k], d);
+
+  if (c.trackMs    !== undefined) $('trackS').value     = String(c.trackMs / 1000);
+  if (c.nameMs     !== undefined) $('nameS').value      = Math.round(c.nameMs / 1000);
+  if (c.txPower    !== undefined) $('txPower').value    = c.txPower;
+  if (c.buzzer     !== undefined) $('buzzer').value     = c.buzzer;
+  if (c.lowVoltMv  !== undefined) $('lowVoltV').value   = (c.lowVoltMv / 1000).toFixed(2);
+  if (c.autoOffMin !== undefined) $('autoOffMin').value = c.autoOffMin;
+  if (c.fProto     !== undefined){
+    const r = document.querySelector('#fProtoSeg input[value="' + c.fProto + '"]');
+    if (r) r.checked = true;
+  }
+
+  refreshOutputs();
+  syncRx();
+  filling = false;
+}
+
+function refreshOutputs(){
+  const p = Number($('txPower').value || 0);
+  $('txPowerOut').textContent = p + ' dBm · ' +
+    t('power')[p <= 0 ? 0 : p <= 10 ? 1 : p <= 17 ? 2 : 3];
+  const v = Number($('buzzer').value || 0);
+  $('buzzerOut').textContent = v + ' % · ' +
+    t('volume')[v === 0 ? 0 : v <= 30 ? 1 : v <= 70 ? 2 : 3];
+}
+redraw.push(refreshOutputs);
+
+function syncRx(){
+  const on = $('rxOn').checked;
+  $('rxProtoRow').style.opacity = on ? '1' : '.45';
+  $('rxProto').disabled = !on;
+  renderRxTally();
+}
+
+function renderRxTally(){
+  const on = $('rxOn').checked;
+  const n  = rxSeen.size;
+  $('rxTally2').textContent = !on ? t('off')
+    : PROTO[Number($('rxProto').value) || 0] + (n ? ' · ' + n : '');
+}
+
+function valid(){
+  let ok = true;
+  for (const [k, d] of Object.entries(HEXF)){
+    const el = $(k); if (!el) continue;
+    const bad = !new RegExp('^0x[0-9a-fA-F]{1,' + d + '}$').test(el.value.trim());
+    el.classList.toggle('bad', bad);
+    if (bad) ok = false;
+  }
+  for (const k of ['trackS','nameS','lowVoltV','autoOffMin']){
+    const el = $(k);
+    const n = Number(el.value);
+    const bad = el.value === '' || isNaN(n) || n < Number(el.min) || n > Number(el.max);
+    el.classList.toggle('bad', bad);
+    if (bad) ok = false;
+  }
+  return ok;
+}
+
+function collect(){
+  const c = {};
+  for (const k of PLAIN){
+    const el = $(k); if (!el) continue;
+    c[k] = el.type === 'checkbox' ? el.checked
+         : el.tagName === 'SELECT' ? Number(el.value)
+         : el.value;
+  }
+  for (const k of Object.keys(HEXF)) if ($(k)) c[k] = unhex($(k).value);
+
+  c.trackMs    = Math.round(parseFloat($('trackS').value) * 1000);
+  c.nameMs     = Math.round(parseFloat($('nameS').value) * 1000);
+  c.txPower    = Number($('txPower').value);
+  c.buzzer     = Number($('buzzer').value);
+  c.lowVoltMv  = Math.round(parseFloat($('lowVoltV').value) * 1000);
+  c.autoOffMin = Number($('autoOffMin').value);
+  const fp = document.querySelector('#fProtoSeg input:checked');
+  if (fp) c.fProto = Number(fp.value);
+  return c;
+}
+
+// Every change goes straight to the device. The firmware keeps it in RAM and
+// writes it to flash when the link closes or the device is switched off, so
+// there is no save step that can be forgotten.
+let pushTimer = null;
+function push(immediate){
+  if (filling || !rxChar) return;
+  clearTimeout(pushTimer);
+  pushTimer = setTimeout(() => {
+    if (!valid()){ toast(t('checkInput')); return; }
+    const c = collect();
+    cfgNow = Object.assign({}, cfgNow, c);
+    send({ cmd: 'set', cfg: c });
+  }, immediate ? 0 : 600);
+}
+
+// Switches and selects apply at once; typing waits until it settles.
+document.addEventListener('change', e => {
+  const el = e.target;
+  if (!el.id && el.name !== 'fProto') return;
+  if (el.id.startsWith('dbg')) return;     // console switches, not settings
+  if (el.id === 'rxOn' || el.id === 'rxProto') syncRx();
+  if (el.id === 'buzzer') send({ cmd: 'beep', vol: Number($('buzzer').value) });
+  push(el.type !== 'text' && el.type !== 'number');
+});
+document.addEventListener('input', e => {
+  const el = e.target;
+  if (el.id === 'txPower' || el.id === 'buzzer') refreshOutputs();
+  if (el.type === 'text' || el.type === 'number') push(false);
+});
+
+dbgClear();
+setConnected(false);
+applyLanguage();
+setDebug(dbgOn);
+</script>
