@@ -26,7 +26,7 @@
 #define FANET_VENDOR_ID  0xBD
 
 // Firmware version, reported to configuration clients. Raise on every release.
-#define FW_VERSION       "0.3.0"
+#define FW_VERSION       "0.3.1"
 
 struct Config {
   uint8_t  version;
@@ -80,6 +80,13 @@ CfgSaveResult cfgSaveIfSettled();
 
 // Stores the key of a client that the user confirmed at the button.
 void cfgClientAdd(const uint8_t key[CLIENT_KEY_LEN]);
+
+// Whether the device should be running. Kept in the file system because
+// nothing else survives everything that can restart the chip: plugging in a
+// cable wakes it from system-off, and pulling one out can reset it outright.
+// Not part of the settings. True until anything has been stored.
+bool cfgPowerIntent();
+void cfgSetPowerIntent(bool on);             // writes only on a change
 
 // Serialises the settings into an existing JsonObject. The client keys are
 // not part of it: they are stored with the settings but are nobody's to read

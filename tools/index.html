@@ -293,7 +293,8 @@
   #toast{position:fixed;left:50%;bottom:calc(1.1rem + env(safe-area-inset-bottom));
     transform:translate(-50%,1.5rem);opacity:0;pointer-events:none;transition:.2s;
     background:var(--text);color:var(--bg);padding:.55rem .95rem;border-radius:10px;
-    font-size:.87rem;z-index:50;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+    font-size:.87rem;z-index:50;box-shadow:0 6px 20px rgba(0,0,0,.25);
+    width:max-content;max-width:min(30rem,calc(100vw - 2rem));text-align:center}
   #toast.show{opacity:1;transform:translate(-50%,0)}
 
   footer{display:flex;align-items:center;justify-content:space-between;gap:.6rem;color:var(--faint);font-size:.76rem;padding:.4rem .25rem 1.4rem}
@@ -589,7 +590,9 @@ const TEXT = {
     unknown: 'unbekannt', ago: 'vor {0} s', nothingHeard: 'Noch nichts empfangen.',
     acft: ['–', 'Segelflug', 'Schlepp', 'Hubschrauber', 'Fallschirm', 'Absetzer', 'Drachen',
            'Gleitschirm', 'Motorflug', 'Jet', 'unbekannt', 'Ballon', 'Luftschiff', 'Drohne', '–', 'Objekt'],
-    connFailed: 'Verbindung fehlgeschlagen', notConfirmed: 'Nicht bestätigt – Verbindung getrennt',
+    connFailed: 'Verbindung fehlgeschlagen',
+    staleServices: 'Das Gerät hat sich eine ältere Firmware gemerkt: Beacon in den Bluetooth-Einstellungen entkoppeln oder entfernen, Bluetooth aus- und einschalten, dann erneut verbinden.',
+    notConfirmed: 'Nicht bestätigt – Verbindung getrennt',
     saveFailed: 'Speichern fehlgeschlagen', checkInput: 'Eingabe prüfen',
     versionMismatch: 'Seite und Firmware passen nicht zusammen',
   },
@@ -641,7 +644,9 @@ const TEXT = {
     unknown: 'unknown', ago: '{0} s ago', nothingHeard: 'Nothing received yet.',
     acft: ['–', 'Glider', 'Tow plane', 'Helicopter', 'Parachute', 'Drop plane', 'Hang glider',
            'Paraglider', 'Powered', 'Jet', 'unknown', 'Balloon', 'Airship', 'Drone', '–', 'Object'],
-    connFailed: 'Connection failed', notConfirmed: 'Not confirmed – disconnected',
+    connFailed: 'Connection failed',
+    staleServices: 'This device remembers an older firmware: unpair or remove the beacon in its Bluetooth settings, turn Bluetooth off and on, then connect again.',
+    notConfirmed: 'Not confirmed – disconnected',
     saveFailed: 'Saving failed', checkInput: 'Check the input',
     versionMismatch: 'Page and firmware do not match',
   },
@@ -1002,7 +1007,10 @@ $('connBtn').onclick = async () => {
   try { await connect(); }
   catch(e){
     console.error(step, e);
-    toast(t('connFailed') + ' (' + step + ')', 6000);
+    // A service that is not found, on a beacon that has it, means the phone or
+    // computer answered from a list it kept from an earlier firmware.
+    if (step === 'service' && e.name === 'NotFoundError') toast(t('staleServices'), 12000);
+    else toast(t('connFailed') + ' (' + step + (e.name ? ': ' + e.name : '') + ')', 6000);
     if (dev.gatt.connected) dev.gatt.disconnect();
     setConnected(false);
   }

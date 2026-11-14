@@ -7,6 +7,7 @@ using namespace Adafruit_LittleFS_Namespace;
 
 #define CFG_PATH     "/config.json"
 #define CFG_TMP_PATH "/config.new"
+#define POWER_PATH   "/power"
 
 Config cfg;
 
@@ -302,6 +303,39 @@ bool cfgSave() {
 bool cfgSaveIfDirty() {
   if (!s_dirty) return false;
   return cfgSave();
+}
+
+// ---------------------------------------------------------------------------
+//  Power intent
+// ---------------------------------------------------------------------------
+//  One byte, '1' or '0'. Written when the device is switched on or off, which
+//  is a few times a day at most.
+static int8_t s_powerIntent = -1;            // not read yet
+
+bool cfgPowerIntent() {
+  if (s_powerIntent < 0) {
+    InternalFS.begin();
+    s_powerIntent = 1;
+    File f(InternalFS);
+    if (f.open(POWER_PATH, FILE_O_READ)) {
+      if (f.read() == '0') s_powerIntent = 0;
+      f.close();
+    }
+  }
+  return s_powerIntent != 0;
+}
+
+void cfgSetPowerIntent(bool on) {
+  if (cfgPowerIntent() == on) return;
+
+  // Removed first: writing appends rather than replacing.
+  InternalFS.remove(POWER_PATH);
+  File f(InternalFS);
+  if (f.open(POWER_PATH, FILE_O_WRITE)) {
+    f.write(uint8_t(on ? '1' : '0'));
+    f.close();
+  }
+  s_powerIntent = on ? 1 : 0;
 }
 
 // ---------------------------------------------------------------------------

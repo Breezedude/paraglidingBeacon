@@ -676,11 +676,7 @@ bool bleAuthConfirm() {
     uint8_t key[CLIENT_KEY_LEN];
     if (!fillRandom(key, sizeof(key))) return false;
 
-    // Written at once: the client keeps its copy from this moment, and a key
-    // the device forgot at the next flat battery would only lock it out.
     cfgClientAdd(key);
-    cfgSaveIfDirty();
-
     link.pending = false;
     link.open    = true;
 
@@ -691,6 +687,13 @@ bool bleAuthConfirm() {
     doc["ok"]  = true;
     doc["key"] = hex;
     sendTo(h, link, doc);
+    drain(h, link);
+
+    // Written at once, but after the answer is on its way: writing the file
+    // takes a good part of a second, and the client need not wait for it. Were
+    // the write lost, the client would be asked for the button once more,
+    // nothing worse.
+    cfgSaveIfDirty();
     return true;
   }
   return false;
@@ -804,6 +807,15 @@ void bleBegin(const char *devName) {
     Serial.println("ble: stack did not start");
     return;
   }
+  // The library has a connection indicator of its own: it toggles LED_BLUE
+  // from a timer every 250 ms while advertising and lights it while
+  // connected. This board has no blue LED, and the variant maps that name to
+  // the red one. The main loop rewrites both LEDs on every pass, which hides
+  // the toggling, but not while the loop is held up: during the melodies, and
+  // above all during the second or so it takes to send the GNSS receiver into
+  // backup mode on the way to switching off, the red LED flashed by itself.
+  Bluefruit.autoConnLed(false);
+
   Bluefruit.setTxPower(4);
   Bluefruit.setName(devName);
   Bluefruit.setEventCallback(onBleEvent);

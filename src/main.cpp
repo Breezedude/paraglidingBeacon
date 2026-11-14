@@ -180,6 +180,10 @@ void melodyAskPairing() {
 }
 void melodyPaired() { beep(988, 70); beep(1319, 70); beep(1760, 160); }
 void melodyOn()    { beep(880, 80); beep(1175, 80); beep(1568, 150); }
+// A cable plugged into or pulled out of a device that is switched off. Short,
+// because nothing else happens: up for in, down for out.
+void melodyPlugged()   { beep(1047, 60); beep(1319, 90); }
+void melodyUnplugged() { beep(1319, 60); beep(1047, 90); }
 void melodyRefuse(){ beep(300, 260); delay(70); beep(240, 420); }
 
 void melodyLowBattery() {
@@ -364,8 +368,9 @@ bool batteryBelowCutoff() {
 // ---------------------------------------------------------------------------
 //  Power off
 // ---------------------------------------------------------------------------
-//  True system-off draws a few microamps. The only wake source is the button
-//  through the GPIO detect logic, and waking is a reset, so setup() runs again.
+//  True system-off draws a few microamps. It is left through the button, by the
+//  GPIO detect logic, or by a cable being plugged in, which the chip detects
+//  on its own. Either way waking is a reset, so setup() runs again.
 //
 //  What the rest of the board draws meanwhile depends entirely on the state
 //  its lines are left in, and the processor being off does not help with that:
@@ -465,6 +470,11 @@ void enterSystemOff() {
   // ungraceful disconnect cannot lose the configuration.
   cfgSaveIfDirty();
 
+  // Off is a state to return to. Whatever restarts the chip next, a cable
+  // going in or the supply dipping as one comes out, must not switch the
+  // device on by itself.
+  cfgSetPowerIntent(false);
+
   // Wait for release first. The wake condition is a level, not an edge: going
   // to sleep with the button still down satisfies it immediately and the
   // device wakes straight back up.
@@ -476,6 +486,12 @@ void enterSystemOff() {
   // the button to have been pressed again.
   waitForButtonRelease();
   watchdogFeed();
+
+  // With a cable in, the device does not go into system-off. Pulling the
+  // cable out has to be noticed, to acknowledge it, and system-off does not
+  // notice it. Restarting goes to the charging state instead, see
+  // chargingIdle(), with every part already switched off.
+  if (usbPresent()) NVIC_SystemReset();
 
   armButtonWake();
   powerOffNow();                             // never returns
@@ -510,13 +526,14 @@ bool waitForButton(bool wantPressed, uint32_t timeoutMs) {
 }
 
 // Two stage wake, so the device cannot switch itself on in a pocket:
-// the press that woke it, a release, then a deliberate hold.
-void confirmWake() {
+// the press that started it, a release, then a deliberate hold. Returns false,
+// with buzzer and LEDs off again, when the gesture was not completed.
+bool wakeGesture() {
   beep(1200, 100);
 
-  if (!waitForButton(false, 2000)) enterSystemOff();
+  if (!waitForButton(false, 2000)) return false;
   delay(50);
-  if (!waitForButton(true, 800)) enterSystemOff();
+  if (!waitForButton(true, 800)) return false;
 
   constexpr uint16_t notes[3] = {880, 1175, 1568};
   constexpr uint16_t hold     = 510;
@@ -529,12 +546,53 @@ void confirmWake() {
       toneOff();
       digitalWrite(PIN_LED_GREEN, LOW);
       digitalWrite(PIN_LED_RED, LOW);
-      enterSystemOff();
+      return false;
     }
   }
   toneOff();
   digitalWrite(PIN_LED_GREEN, HIGH);
   wakeConfirmed = true;
+  return true;
+}
+
+void confirmWake() {
+  if (!wakeGesture()) enterSystemOff();
+}
+
+// ---------------------------------------------------------------------------
+//  Charging while switched off
+// ---------------------------------------------------------------------------
+//  The battery charges by itself. The firmware stays out of the way and
+//  watches for two things: the cable coming out, which ends in system-off,
+//  and the wake gesture, which switches the device on as if it had not been
+//  charging. Nothing else is started, no GNSS, radio or Bluetooth, and the
+//  LEDs stay dark. The processor is awake for this, on USB power.
+constexpr uint32_t kUnplugSettleMs = 300;
+
+void chargingIdle(bool announce) {
+  if (announce) melodyPlugged();
+
+  bool     unplugged = false;
+  uint32_t unpluggedMs = 0;
+  for (;;) {
+    watchdogFeed();
+
+    if (usbPresent()) {
+      unplugged = false;
+    } else if (!unplugged) {
+      unplugged   = true;
+      unpluggedMs = millis();
+    } else if (millis() - unpluggedMs >= kUnplugSettleMs) {
+      melodyUnplugged();
+      enterSystemOff();                      // never returns: the cable is out
+    }
+
+    if (buttonPressed()) {
+      if (wakeGesture()) return;
+      waitForButtonRelease();
+    }
+    delay(20);
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -1130,18 +1188,21 @@ void updateLeds() {
   }
 
   if (!fix) {
-    digitalWrite(PIN_LED_RED, ((now % 500) < 60) ? LOW : HIGH);
+    const bool redBeat = (now % 500) >= 60;   // red blinks out twice a second
+    digitalWrite(PIN_LED_RED, redBeat ? HIGH : LOW);
 
     uint8_t satellites = satsInView();
     if (satellites > 12) satellites = 12;
     if (satellites == 0) { digitalWrite(PIN_LED_GREEN, HIGH); return; }
 
     // Against amber a green blink would be invisible, so the count shows as
-    // short gaps instead.
+    // short dark gaps instead. Both colours go out for a gap: with only the
+    // green one off, each gap would read as a red flash.
     const uint8_t pulses = uint8_t(satellites * 2);
     if (step < pulses) {
       const bool gap = (step % 2) == 0;
       digitalWrite(PIN_LED_GREEN, gap ? LOW : HIGH);
+      if (gap) digitalWrite(PIN_LED_RED, LOW);
       if (now - phaseMs >= (gap ? 110u : 190u)) { phaseMs = now; ++step; }
     } else {
       digitalWrite(PIN_LED_GREEN, HIGH);
@@ -1173,6 +1234,7 @@ void handleButton() {
   static uint32_t pressedAt = 0;
   static bool     armed = false;
   static bool     released = false;
+  static bool     usedForPairing = false;
 
   const bool now = buttonPressed();
 
@@ -1183,7 +1245,24 @@ void handleButton() {
     return;
   }
 
-  if (now && !previous) { pressedAt = millis(); armed = false; }
+  if (now && !previous) {
+    pressedAt = millis();
+    armed = false;
+    usedForPairing = false;
+
+    if (bleAuthPending()) {
+      // A client waiting for confirmation is answered on the press itself,
+      // not on the release: the click says at once that the button was hit,
+      // and the melody follows as soon as the client has its answer. The
+      // whole point of the confirmation is that it happens here rather than
+      // over the air, so while one is waiting the press means this and
+      // nothing else.
+      usedForPairing = true;
+      beep(2200, 25);
+      if (bleAuthConfirm()) melodyPaired();
+      else                  melodyRefuse();
+    }
+  }
 
   if (now && !armed && millis() - pressedAt >= kShutdownHoldMs) {
     armed = true;
@@ -1193,17 +1272,9 @@ void handleButton() {
   if (!now && previous) {
     if (armed) {
       enterSystemOff();
-    } else if (millis() - pressedAt < 1000) {
-      if (bleAuthPending()) {
-        // The whole point of the confirmation is that it happens here rather
-        // than over the air, so the short press means this and nothing else
-        // while a client is waiting.
-        if (bleAuthConfirm()) melodyPaired();
-        else                  melodyRefuse();
-      } else {
-        beep(1500, 80);
-        bleSendStatus();
-      }
+    } else if (!usedForPairing && millis() - pressedAt < 1000) {
+      beep(1500, 80);
+      bleSendStatus();
     }
   }
   previous = now;
@@ -1572,9 +1643,24 @@ void setup() {
     enterSystemOff();
   }
 
-  // Waking from system-off is a reset, so the wake gesture only applies there.
-  // A cold start, for instance over USB, comes up directly.
-  if (readResetReason() & POWER_RESETREAS_OFF_Msk) confirmWake();
+  // Whatever restarted the chip, the device comes back in the state it was
+  // in. Only the button switches it on.
+  const uint32_t reason = readResetReason();
+  if (reason & POWER_RESETREAS_OFF_Msk) {
+    // The button woke it from system-off.
+    confirmWake();
+  } else if (reason & POWER_RESETREAS_VBUS_Msk) {
+    // A cable was plugged into a device that was switched off.
+    chargingIdle(true);
+  } else if (!cfgPowerIntent()) {
+    // Off before the restart. A reset with no reason recorded is a power-up,
+    // which is how plugging in or pulling out a cable can arrive; any other
+    // reason is the firmware's own, such as switching off while charging.
+    if (usbPresent()) chargingIdle(reason == 0);
+    else              enterSystemOff();
+  }
+  // On from here, until switched off.
+  cfgSetPowerIntent(true);
 
   gnssStart();
 

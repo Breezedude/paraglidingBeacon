@@ -70,8 +70,9 @@ device.
    is to flick the magnetic connector sideways and let it snap back. The device
    now appears as a USB drive.
 3. Copy the `.uf2` file onto that drive.
-4. The device restarts by itself and is ready. The drive disappears, which is
-   normal.
+4. The device restarts by itself and the drive disappears, which is normal. It
+   comes back in the state it was in before: if it was switched off, switch it
+   on as usual.
 
 If no drive appears, try the double connection again and hold the button a
 little longer.
@@ -93,10 +94,10 @@ Meshtastic installs the same way it did before: copy its file onto the drive.
 |---|---|---|---|
 | **Turn on** | Press briefly, release, then press again and hold about half a second | Green fades up, red flashes alongside | Short tone, then a rising three-tone melody |
 | **Searching for satellites** | — | Amber, red blinking out twice a second | — |
-| **Satellite count** | — | Short gaps in the amber, one per satellite found | — |
+| **Satellite count** | — | Short dark gaps in the amber, one per satellite found | — |
 | **Position acquired** | — | Amber stops | Two rising tones |
 | **Position lost** | — | Amber returns | Two falling tones, after ten seconds |
-| **Settings page asking for access** | Press briefly to allow | Alternating green and red | Two-tone question, then a rising confirmation |
+| **Settings page asking for access** | Press briefly to allow | Alternating green and red | Two-tone question; a click as you press, then a rising confirmation |
 | **Transmitting** | — | Short green flash for each transmission | — |
 | **Lying still** | — | Very short green blink once a second | — |
 | **Check status** | Press briefly | — | Single beep |
@@ -104,6 +105,8 @@ Meshtastic installs the same way it did before: copy its file onto the drive.
 | **Auto-off after no movement** | — | Green fades down, red flashes | Falling melody |
 | **Battery too empty to start** | — | Stays dark | Low double tone |
 | **Battery empty, shutting down** | — | Green fades down | Sad, drooping melody |
+| **Cable plugged in while off** | — | Stays dark | Two short rising tones |
+| **Cable pulled out while off** | — | Stays dark | Two short falling tones |
 
 A few things worth knowing:
 
@@ -114,6 +117,11 @@ on in your rucksack. If you are too slow between them it simply stays off.
 the falling melody plays; the device switches off the moment you release.
 Holding on longer only postpones it. Once the melody has played there is no way
 back, so if you did not mean it, switch it on again.
+
+**Charging does not switch it on or off.** Plugging in or pulling out the cable
+leaves the beacon as it was: off stays off, with a short tone to say the cable
+was noticed, and on stays on. It can be switched on and off while charging, in
+the usual way.
 
 **Lying still, it goes quiet rather than silent.** After about fifteen seconds
 without movement it drops to one position every ten seconds instead of the full

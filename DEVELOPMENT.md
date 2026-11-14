@@ -176,6 +176,14 @@ Anything that holds the main loop for longer cuts sentences out of it, and the
 symptom is a fix that keeps dropping out under an open sky. The buffer is
 enlarged with `SERIAL_BUFFER_SIZE` in `platformio.ini`.
 
+**The Bluetooth library drives the red LED.** Bluefruit expects a blue LED as
+its connection indicator, blinks it from a timer while advertising and lights
+it while connected. The variant has to define `LED_BLUE` for the library to
+build and maps it to the red LED, so the indicator is switched off with
+`Bluefruit.autoConnLed(false)`. Left on, the main loop hides it by rewriting
+the LEDs on every pass, except while the loop is held up: then the red LED
+flashes by itself, most visibly during the GNSS shutdown on the way off.
+
 **The core sets every output latch high on start-up**, and pin configuration
 survives the reset that wakes the device from system-off. A supply enable left
 as a low output while off therefore pulses high on every wake, before
@@ -386,6 +394,10 @@ client                                   device
 - While a client waits for the button, the LED alternates green and red and a
   two-tone figure plays that is deliberately unlike the fix melodies. Thirty
   seconds without a press drops the connection.
+- The press is acted on as it goes down, not on release, with a click at once.
+  The key is sent before it is written to flash, which takes a good part of a
+  second; were that write lost, the client would only be asked for the button
+  again.
 - Two clients waiting at once are both turned away by the press: it cannot say
   which of the two it means, and the other may be a stranger who was waiting
   for exactly this moment.
@@ -764,7 +776,7 @@ the loss was.
 ### While switched off
 
 The processor is in system-off, a few microamps, and wakes on the button
-through GPIO sense. That says nothing about the rest of the board. Pin
+through GPIO sense, or when a cable is plugged in. That says nothing about the rest of the board. Pin
 configuration is retained in system-off, and every line that still reaches a
 part without supply feeds it through that part's protection diodes. The states
 below are taken from the manufacturer's power-off routine; held with the
@@ -844,6 +856,29 @@ reconfigured once started and survives a soft reset.
 | Hold for three seconds | Melody, then off on release | |
 | No movement for `autoOffMin` | Off | Only while the accelerometer answers: a silent sensor looks like no movement and must never switch the device off by itself |
 | Below `lowVoltMv` | Off after three samples in a row, ten seconds apart | The supply dips during a transmission, and one reading must not end the flight |
+| Cable in or out | No change; off stays off, on stays on | Charging is not a reason to fly, and pulling a cable out is not a reason to start |
+
+Whether the device should be running is kept in a one-byte file, `/power`
+(`cfgPowerIntent()`), because nothing else survives everything that restarts
+the chip: plugging in a cable wakes it from system-off, and pulling one out can
+reset it outright as the supply changes over. `setup()` decides from the reset
+reason and that file:
+
+| Restarted by | Was | Then |
+|---|---|---|
+| The button, out of system-off | off | the wake gesture; failing it goes back to off |
+| A cable, out of system-off | off | the charging state, with two rising tones |
+| Anything else: power-up, watchdog, the firmware's own reset | on | runs straight away |
+| | off | the charging state if a cable is in, otherwise system-off |
+
+The charging state (`chargingIdle()`) starts nothing: no GNSS, radio or
+Bluetooth, and the LEDs stay dark. The processor stays awake on USB power and
+watches for the cable to come out, which ends in system-off with two falling
+tones, and for the wake gesture, which switches the device on.
+
+Switching off with a cable in leads there too. System-off would not notice the
+cable coming out, so `enterSystemOff()` shuts the board down as usual and then
+restarts into the charging state instead.
 
 ---
 
@@ -985,9 +1020,16 @@ receives. Nothing changes on the device, and the subscription ends with the
 connection.
 
 A failed connection names the step it stopped at, in brackets after the
-message: `gatt`, `service`, `characteristic`, `notify` or `hello`. `service`
-usually means the operating system still remembers the services of an older
-firmware; removing the device in its Bluetooth settings clears that.
+message: `gatt`, `service`, `characteristic`, `notify` or `hello`, and the
+error's name.
+
+A configuration service that is not found, on a beacon that has one, means the
+phone or computer answered from the service list it kept from an earlier
+firmware. Android keeps one for every device it is paired with, Windows for
+devices it has seen. The page says so and what to do: unpair or remove the
+beacon in the Bluetooth settings, switch Bluetooth off and on, connect again.
+A change to the services in a firmware update brings this on for anyone paired,
+which is a reason to keep the service layout stable.
 
 ### Working on it without a beacon
 
